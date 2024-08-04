@@ -9,13 +9,6 @@ if (-not (Test-Path .\venv)) {
 # Activate virtual environment
 & .\venv\Scripts\Activate.ps1
 
-# Check if requirements are installed, install if they're not
-if (-not (Test-Path .\venv\Lib\site-packages\numpy) -or 
-    -not (Test-Path .\venv\Lib\site-packages\pandas) -or 
-    -not (Test-Path .\venv\Lib\site-packages\matplotlib)) {
-    Write-Host "Installing requirements..."
-    pip install -r requirements.txt
-}
 
 # Run the Python script
 Write-Host "Running plot.py..."
