@@ -10,7 +10,7 @@ univ3_pair = 'USDCWETH'
 
 
 # Add these variables to src.binance.vars
-simulation_start_day = "0705"  # MMDD format
+simulation_start_day = "0101"  # MMDD format
 simulation_end_day = "0802"    # MMDD format
 
 simulation_current_day = simulation_start_day
