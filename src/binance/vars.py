@@ -9,9 +9,8 @@ binance_pair = 'ETHUSDT'
 univ3_pair = 'USDCWETH'
 
 
-# Add these variables to src.binance.vars
-simulation_start_day = "0101"  # MMDD format
-simulation_end_day = "0802"    # MMDD format
+simulation_start_day = "20240101"  # YYYYMMDD format
+simulation_end_day = "20240802"    # YYYYMMDD format
 
 simulation_current_day = simulation_start_day
 
@@ -21,7 +20,7 @@ avg_entry_price = 0
 usd_balance = 100000
 fee = 0.00075
 
-CSV_FILENAME = "upnl_log.csv"
+CSV_FILENAME = "./src/upnl_log.csv"
 
 last_time = 0
 last_10_minutes = 0

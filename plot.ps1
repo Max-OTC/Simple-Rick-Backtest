@@ -12,7 +12,7 @@ if (-not (Test-Path .\venv)) {
 
 # Run the Python script
 Write-Host "Running plot.py..."
-python .\src\binance\plot.py
+python .\src\plot\plotBinance.py
 
 # Deactivate virtual environment
 deactivate

@@ -14,17 +14,17 @@ data_cache = {}
 date_list = None
 current_date_index = 0
 current_data = None
+current_univ3_data = None
 
 def initialize_date_range():
     global date_list
-    start = datetime.strptime(vars.simulation_start_day, "%m%d")
-    end = datetime.strptime(vars.simulation_end_day, "%m%d")
-    end = end.replace(year=start.year + 1 if end < start else start.year)
+    start = datetime.strptime(vars.simulation_start_day, "%Y%m%d")
+    end = datetime.strptime(vars.simulation_end_day, "%Y%m%d")
     
-    date_list = [(start + timedelta(days=i)).strftime("%m%d") for i in range((end - start).days + 1)]
+    date_list = [(start + timedelta(days=i)).strftime("%Y%m%d") for i in range((end - start).days + 1)]
 
 def get_next_tick(last_time):
-    global data_cache, date_list, current_date_index, current_data
+    global data_cache, date_list, current_date_index, current_data, current_univ3_data
 
     if date_list is None:
         initialize_date_range()
@@ -32,8 +32,9 @@ def get_next_tick(last_time):
     while current_date_index < len(date_list):
         current_day = date_list[current_date_index]
         csv_path = f"data/binance/{vars.binance_pair}/{current_day}.csv"
+        univ3_csv_path = f"data/univ3/{vars.univ3_pair}/{current_day}.csv"
 
-        if current_data is None:
+        if current_data is None or current_univ3_data is None:
             if csv_path not in data_cache:
                 data = load_csv_data(csv_path)
                 if data is None:
@@ -42,6 +43,14 @@ def get_next_tick(last_time):
                 data_cache[csv_path] = data
             current_data = data_cache[csv_path]
 
+            if univ3_csv_path not in data_cache:
+                univ3_data = load_csv_data(univ3_csv_path)
+                if univ3_data is None:
+                    current_date_index += 1
+                    continue
+                data_cache[univ3_csv_path] = univ3_data
+            current_univ3_data = data_cache[univ3_csv_path]
+
         mask = current_data[:, 0] > last_time
         if np.any(mask):
             idx = np.argmax(mask)
@@ -49,6 +58,8 @@ def get_next_tick(last_time):
 
         current_date_index += 1
         current_data = None
+        current_univ3_data = None
 
     print("Simulation end")
     return None, None
+

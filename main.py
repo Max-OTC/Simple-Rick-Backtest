@@ -11,7 +11,6 @@ def run_simulation():
             break
 
     print("Simulation complete")
-    print("Total profit: " + str(vars.usd_balance))
 
 if __name__ == "__main__":
     run_simulation()
