@@ -37,4 +37,4 @@ print("x,y :", x, y)
 px0 = px
 step = 0.1
 px1 = px0 * (1 + step)
-il_delta(x, y, px0, px1, pa, pb)
+il_delta(x, y, 1/px0, 1/px1, pa, pb)
