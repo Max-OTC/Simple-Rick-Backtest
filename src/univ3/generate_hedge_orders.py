@@ -1,5 +1,5 @@
 import numpy as np
-from token1_token2_balance import token1_token2_balance
+from src.univ3.x1_x2_balance import x1_x2_balance, delta_hedge, usdeth_binance_delta_hedge
 
 def generate_hedge_orders(current_price, range_lower, range_upper, pool_amount_usdc, hedge_amount_usdc, order_spacing):
     orders = []
@@ -11,18 +11,26 @@ def generate_hedge_orders(current_price, range_lower, range_upper, pool_amount_u
     print(f"Number of steps: {num_steps}")
     
     for step in range(num_steps):
+        if current_price < range_lower:
+            token1_balance, token2_balance = x1_x2_balance(pool_amount_usdc, price, range_lower, range_upper)
+
+
         # Calculate price for this step, starting from the lower bound
         price = range_lower * (1 + step * order_spacing / 100)
         price = min(price, range_upper)
+        print( f"Price: {price:.2f}")
         
         # Calculate balance at this price
-        token1_balance, token2_balance = token1_token2_balance(pool_amount_usdc, 0, price, range_lower, range_upper)
+        token1_balance, token2_balance = x1_x2_balance(pool_amount_usdc, price, range_lower, range_upper)
+        print(f"Token1: {token1_balance:.2f} USDC, Token2: {token2_balance:.6f} ETH ({token2_balance * price:.2f} USD)")
         
         # Calculate total hedge amount in ETH
         total_hedge_eth = hedge_amount_usdc / current_price
+        print(f"Total Hedge Amount in ETH: {total_hedge_eth:.6f}")
         
         # Calculate hedge amount for this step
         hedge_amount = (total_hedge_eth / num_steps)
+        print(f"Hedge Amount: {hedge_amount:.6f}")
         
         is_long = price > current_price
         orders.append({
@@ -30,8 +38,6 @@ def generate_hedge_orders(current_price, range_lower, range_upper, pool_amount_u
             'amount': hedge_amount,
             'isLong': is_long
         })
-        current_hedge += hedge_amount
-        order_type = "Long" if is_long else "Short"
         print(f"Price: {price:.2f}, Token1: {token1_balance:.2f} USDC, Token2: {token2_balance:.6f} ETH ({token2_balance * price:.2f} USD), {order_type} Order: {hedge_amount:.6f} ETH")
     
     return orders
