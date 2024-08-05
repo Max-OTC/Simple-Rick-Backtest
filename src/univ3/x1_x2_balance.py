@@ -1,59 +1,47 @@
 import numpy as np
+def calculate_liquidity(x, y, px, pa, pb):
+    """
+    Calculate the liquidity for a given position in a Uniswap V3-style liquidity pool.
 
-def x1_x2_balance(usd_notional, current_price, range_lower, range_upper, buffer=0.0001):
+    :param x: Amount of asset X
+    :param y: Amount of asset Y
+    :param px: Current price of X in terms of Y
+    :param pa: Lower price bound
+    :param pb: Upper price bound
+    :return: Calculated liquidity
     """
-    Calculate the balance of token1 (USDC) and token2 (ETH) based on concentrated liquidity in Uniswap V3.
+    sqrt_px = np.sqrt(px)
+    sqrt_pa = np.sqrt(pa)
+    sqrt_pb = np.sqrt(pb)
     
-    :param usd_notional: Total value of the position in USD
-    :param current_price: Current price of ETH in USDC
-    :param range_lower: Lower price range in USDC
-    :param range_upper: Upper price range in USDC
-    :param buffer: Small buffer to handle edge cases
-    :return: Tuple of (usdc_balance, eth_balance)
-    """
-    if current_price < range_lower * (1 + buffer):
-        # All liquidity is in USDC
-        return usd_notional, 0
-    
-    elif current_price > range_upper * (1 - buffer):
-        # All liquidity is in ETH
-        return 0, usd_notional / current_price
-    
+    if px >= pb:
+        return y / (sqrt_pb - sqrt_pa)
+    elif px <= pa:
+        return x * sqrt_pa * sqrt_pb / (sqrt_pb - sqrt_pa)
     else:
-        # Liquidity is distributed between USDC and ETH
-        sqrt_price = np.sqrt(current_price)
-        sqrt_lower = np.sqrt(range_lower)
-        sqrt_upper = np.sqrt(range_upper)
-        
-        L = usd_notional / (2 * (sqrt_upper - sqrt_lower) * sqrt_price)
-        
-        usdc_balance = L * (sqrt_upper - sqrt_price) * sqrt_price
-        eth_balance = L * (sqrt_price - sqrt_lower) / sqrt_price
-        
-        return usdc_balance, eth_balance
+        lx = x * ((sqrt_px * sqrt_pb) / (sqrt_pb - sqrt_px))
+        ly = y / (sqrt_px - sqrt_pa)
+        return min(lx, ly)
 
-def delta_hedge(usd_notional, current_price, step, range_lower, range_upper):
-    prev_balance_token1, prev_balance_token2 = x1_x2_balance(usd_notional, current_price, range_lower, range_upper)
-    new_price = current_price * (1 + step)
-    balance_token1, balance_token2 = x1_x2_balance(usd_notional, new_price, range_lower, range_upper)
+def calculate_amounts(l, px, pa, pb):
+    """
+    Calculate the amounts of X and Y for a given liquidity and price range.
+
+    :param l: Liquidity
+    :param px: Current price of X in terms of Y
+    :param pa: Lower price bound
+    :param pb: Upper price bound
+    :return: Tuple (amount of X, amount of Y)
+    """
+    sqrt_px = np.sqrt(px)
+    sqrt_pa = np.sqrt(pa)
+    sqrt_pb = np.sqrt(pb)
     
-    delta_token1 = balance_token1 - prev_balance_token1
-    delta_token2 = balance_token2 - prev_balance_token2
-    
-    print(f"Price: {current_price:.2f} -> {new_price:.2f}")
-    print(f"USDC: {prev_balance_token1:.4f} -> {balance_token1:.4f}, Delta: {delta_token1:.4f}")
-    print(f"ETH: {prev_balance_token2:.4f} -> {balance_token2:.4f}, Delta: {delta_token2:.4f}")
-    
-    return delta_token1, delta_token2
-
-# Test the function
-usd_notional = 10000   
-current_price = 2200  # USDC per ETH
-range_lower = 1800    
-range_upper = 2200  
-
-step = -0.001  # -0.1% price change
-
-delta1, delta2 = delta_hedge(usd_notional, current_price, step, range_lower, range_upper)
-print(f"\nFinal Delta USDC: {delta1:.4f}")
-print(f"Final Delta ETH: {delta2:.4f}")
+    if px >= pb:
+        return 0, l * (sqrt_pb - sqrt_pa)
+    elif px <= pa:
+        return l * (sqrt_pb - sqrt_pa) / (sqrt_pa * sqrt_pb), 0
+    else:
+        x = l * ((sqrt_pb - sqrt_px) / (sqrt_px * sqrt_pb))
+        y = l * (sqrt_px - sqrt_pa)
+        return x, y
