@@ -51,15 +51,19 @@ def get_next_tick(last_time):
                 data_cache[univ3_csv_path] = univ3_data
             current_univ3_data = data_cache[univ3_csv_path]
 
-        mask = current_data[:, 0] > last_time
-        if np.any(mask):
-            idx = np.argmax(mask)
-            return current_data[idx, 1], current_data[idx, 0]
+        binance_mask = current_data[:, 0] > last_time
+        if np.any(binance_mask):
+            binance_idx = np.argmax(binance_mask)
+            new_time = current_data[binance_idx, 0]
+
+            univ3_mask = (current_univ3_data[:, 0] > last_time) & (current_univ3_data[:, 0] <= new_time)
+            univ3_data_between = current_univ3_data[univ3_mask]
+
+            return current_data[binance_idx, 1], new_time, univ3_data_between
 
         current_date_index += 1
         current_data = None
         current_univ3_data = None
 
     print("Simulation end")
-    return None, None
-
+    return None, None, None

@@ -25,7 +25,7 @@ def setup_grid(base_price):
     for price in short_prices:
         add_limit_order(0.01, price, False)
 
-def strategy_manager(next_tick_price, next_tick_time):
+def strategy(next_tick_price, next_tick_time):
     global first_price
     
     if first_price == 0:

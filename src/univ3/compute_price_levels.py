@@ -1,8 +1,8 @@
 import numpy as np
-from univ3_cl import univ3_cl
-from get_cl_deltas import get_cl_deltas
+from src.univ3.univ3_cl import univ3_cl
+from src.univ3.get_cl_deltas import get_cl_deltas
 
-def compute_price_levels_optimized(pa: float, pb: float, x: float, px: float, step: float) -> list:
+def compute_price_levels(pa: float, pb: float, x: float, px: float, step: float) -> list:
     """
     Compute optimized price levels and corresponding token deltas for a Uniswap V3 liquidity pool.
 
@@ -34,7 +34,7 @@ def compute_price_levels_optimized(pa: float, pb: float, x: float, px: float, st
     - The computation is optimized for large datasets using NumPy operations.
 
     Example:
-    >>> result = compute_price_levels_optimized(1000, 2000, 3, 1450, 0.2)
+    >>> result = compute_price_levels(1000, 2000, 3, 1450, 0.2)
     >>> print(result[0])  # Example output: (1000.0, -0.000000, 0.000000)
     """
     # Generate price levels using logarithmic spacing
@@ -76,7 +76,7 @@ x = 3
 px = 1450
 step = 0.2  # 20% step
 
-result = compute_price_levels_optimized(pa, pb, x, px, step)
+result = compute_price_levels(pa, pb, x, px, step)
 
 # Print the result in a table format
 print("\nFinal Result:")

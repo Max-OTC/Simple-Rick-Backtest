@@ -1,5 +1,4 @@
 import numpy as np
-from univ3_cl import univ3_cl
 
 def get_cl_deltas(results):
     """

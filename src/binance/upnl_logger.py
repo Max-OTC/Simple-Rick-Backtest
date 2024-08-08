@@ -15,5 +15,5 @@ def upnl_logger(time):
         # Log to CSV file
         with open(vars.CSV_FILENAME, 'a', newline='') as csvfile:
             csv_writer = csv.writer(csvfile)
-            csv_writer.writerow([time, vars.long, vars.short, vars.avg_entry_price, vars.usd_balance, vars.last_tick_price])
+            csv_writer.writerow([time, vars.long, vars.short, vars.avg_entry_price, vars.usd_balance, vars.last_tick_price, vars.onchain_pnl])
     vars.last_time = time
