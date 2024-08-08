@@ -30,7 +30,7 @@ def range_rebalance(px):
             rebalance_range(px)
             last_rebalance_time = current_time
 
-def cl_token_delta(px, py=1):
+def cl_token_delta():
     global avg_entry_x, avg_entry_y, x_amount_bought, y_amount_bought
     if avg_entry_x == 0 or avg_entry_y == 0 or x_amount_bought == 0 or y_amount_bought == 0:
         return 0
@@ -39,8 +39,8 @@ def cl_token_delta(px, py=1):
     x_value_entry = x_amount_bought * avg_entry_x
     y_value_entry = y_amount_bought * avg_entry_y
     
-    x_value_current = x_amount_bought * px
-    y_value_current = y_amount_bought / py
+    x_value_current = x_amount_bought * vars.px
+    y_value_current = y_amount_bought / vars.py
     
     return (x_value_current + y_value_current) - (x_value_entry + y_value_entry)
 

@@ -9,14 +9,16 @@ from collections import defaultdict
 from src.univ3.univ3_fee_sim import univ3_fee_sim
 
 def process_next_tick():
-    next_tick_price, next_tick_time, univ3_data = get_next_tick(vars.last_time)
+    next_tick_price, next_tick_time = get_next_tick(vars.last_time)
+    vars.px = next_tick_price
+    vars.tn = next_tick_time
     if next_tick_price is None:
         return False
     
     upnl_logger(next_tick_time)
     fill_limit_orders(next_tick_price)
     strategy_manager(next_tick_price, next_tick_time)
-    univ3_fee_sim(univ3_data)
+    #univ3_fee_sim(univ3_data)
     
     vars.last_time = next_tick_time 
     vars.last_tick_price = next_tick_price

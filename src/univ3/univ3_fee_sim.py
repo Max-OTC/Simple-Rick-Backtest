@@ -1,15 +1,23 @@
 import numpy as np
 from decimal import Decimal
+import src.binance.vars as vars
 
-def univ3_fee_sim(univ3_data, pa, pb, px, x, y):
-    # Convert the data to a numpy array
-    data = np.array(univ3_data, dtype=object)
+def univ3_fee_sim(data):
+    fees = univ3_fee_compute(data, vars.pa, vars.pb, vars.px, vars.x, vars.y)
+    vars.total_fees += fees
+
+def univ3_fee_compute(univ3_data, pa, pb, px, x, y):
+    # Convert the data to a numpy array if it's not already
+    if not isinstance(univ3_data, np.ndarray):
+        data = np.array(univ3_data)
+    else:
+        data = univ3_data
     
     # Extract relevant columns
-    amount_usd = np.array([Decimal(str(val)) for val in data[:, 5]])
-    price = np.array([Decimal(str(val)) for val in data[:, 6]])
-    fee_tier = np.array([Decimal(str(val)) for val in data[:, 8]])
-    liquidity = np.array([Decimal(str(val)) * Decimal('1e-12') for val in data[:, 9]])  # Adjust liquidity
+    amount_usd = np.array([Decimal(str(val['AMOUNT_USD'])) for val in data])
+    price = np.array([Decimal(str(val['PRICE'])) for val in data])
+    fee_tier = np.array([Decimal(str(val['FEE_TIER'])) for val in data])
+    liquidity = np.array([Decimal(str(val['LIQUIDITY'])) * Decimal('1e-12') for val in data])  # Adjust liquidity
     
     # Calculate user's liquidity (simplified version)
     user_liquidity = Decimal(str(x)) * Decimal(str(y)).sqrt()
@@ -44,5 +52,5 @@ px = 3685  # Current price
 x = 1000   # Amount of token 0
 y = 0.271  # Amount of token 1
 
-total_fees = univ3_fee_sim(univ3_data, pa, pb, px, x, y)
-print(f"Total fees generated: {total_fees}")
+#total_fees = univ3_fee_sim(univ3_data, pa, pb, px, x, y)
+#print(f"Total fees generated: {total_fees}")

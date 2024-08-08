@@ -22,6 +22,11 @@ usd_balance = 100000
 fee = 0.00075
 
 ############ UniV3
+px = 0
+py = 1
+x = 0
+y = 0
+tn = 0
 pa = 0
 pb = 0
 step = 0.001
@@ -29,6 +34,7 @@ cl_range = 0.05
 onchain_balance_usd = 100000
 borrow_haircut = 0.8
 onchain_pnl = 0
+total_fees = 0
 
 
 ############ Do not modify
