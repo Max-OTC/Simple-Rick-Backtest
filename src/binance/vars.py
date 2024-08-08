@@ -14,12 +14,10 @@ simulation_current_day = simulation_start_day
 
 CSV_FILENAME = "./src/upnl_log.csv"
 
-############ Binance FUtures
-long = 0
-short = 0
-avg_entry_price = 0
-usd_balance = 100000
-fee = 0.00075
+############ Binance Futures
+binance_rebalance_cost = 0
+univ3_cl_rebalance_cost = 0
+
 
 ############ UniV3
 px = 0
