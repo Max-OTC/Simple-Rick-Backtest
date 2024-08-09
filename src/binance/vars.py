@@ -32,7 +32,6 @@ cl_range = 0.05
 onchain_balance_usd = 100000
 borrow_haircut = 0.8
 onchain_pnl = 0
-total_fees = 0
 
 
 ############ Do not modify

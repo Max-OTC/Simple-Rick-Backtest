@@ -1,6 +1,6 @@
 import numpy as np
 import src.binance.vars as vars
-from src.binance.upnl_logger import upnl_logger
+from binance.upnl_logger import upnl_logger
 from src.binance.fill_long_short import fill_long_short
 from src.binance.strategy_manager import strategy_manager
 from src.binance.get_next_tick import get_next_tick

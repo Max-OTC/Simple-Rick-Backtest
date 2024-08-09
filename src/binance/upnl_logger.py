@@ -2,7 +2,7 @@
 
 import csv
 from datetime import datetime
-import src.binance.vars as vars
+import src.univ3.vars as vars
 
 def reset_log_file():
     with open(vars.CSV_FILENAME, 'w', newline='') as csvfile:

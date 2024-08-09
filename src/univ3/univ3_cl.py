@@ -1,4 +1,7 @@
 import numpy as np
+import vars as vars
+from univ3_cl_balance import univ3_cl_balance
+
 
 def univ3_cl(pa, pb, total_value, balance_price, prices):
     """
@@ -57,4 +60,10 @@ def rebalance_cl(balance_price, range_percent, total_value, step_percent):
     pa, pb = calculate_pool_ranges(balance_price, range_percent)
     prices = generate_prices_array(pa, pb, balance_price, step_percent)
     limit_orders, geometric_mean = univ3_cl(pa, pb, total_value, balance_price, prices)
+    univ3_cl_balance_old = univ3_cl_balance(vars.current_pa, vars.current_pb, vars.current_balance_price, vars.current_total_value, vars.current_px)
+    univ3_cl_balance_new = univ3_cl_balance(pa, pb, balance_price, total_value, balance_price)
+    vars.current_pa, vars.current_pb, vars.current_balance_price, vars.current_total_value = pa, pb, balance_price, total_value
+
+
+
     return limit_orders
