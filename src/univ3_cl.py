@@ -1,5 +1,5 @@
 import numpy as np
-import vars as vars
+import src.vars as vars
 from univ3_cl_balance import univ3_cl_balance
 
 
@@ -57,11 +57,20 @@ def calculate_pool_ranges(balance_price, range_percent):
 
 
 def rebalance_cl(balance_price, range_percent, total_value, step_percent):
+    # update price range
     pa, pb = calculate_pool_ranges(balance_price, range_percent)
     prices = generate_prices_array(pa, pb, balance_price, step_percent)
     limit_orders, geometric_mean = univ3_cl(pa, pb, total_value, balance_price, prices)
-    univ3_cl_balance_old = univ3_cl_balance(vars.current_pa, vars.current_pb, vars.current_balance_price, vars.current_total_value, vars.current_px)
-    univ3_cl_balance_new = univ3_cl_balance(pa, pb, balance_price, total_value, balance_price)
+
+    # Updare rebalance pnl and costs
+    t1_old, t2_old = univ3_cl_balance(vars.current_pa, vars.current_pb, vars.current_balance_price, vars.current_total_value, vars.current_px)
+    t1,t2 = univ3_cl_balance(pa, pb, balance_price, total_value, balance_price)
+    pnl = ( t1 * vars.balance_price + t2 ) - ( t1_old * vars.current_balance_price + t2_old ) - ( t1_old * vars.current_balance_price * vars.uniswap_fee)
+    vars.uniswap_pnl += pnl
+    vars.uni_rebalance_volume +=  t1_old * vars.current_balance_price 
+    vars.uni_rebalance_number += 1
+
+    # store new vars
     vars.current_pa, vars.current_pb, vars.current_balance_price, vars.current_total_value = pa, pb, balance_price, total_value
 
 

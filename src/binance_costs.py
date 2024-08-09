@@ -1,6 +1,6 @@
 import numpy as np
-from univ3_cl import rebalance_cl
-import vars as vars
+#from univ3_cl import rebalance_cl
+import src.vars as vars
 
 def get_next_trigger_prices(current_price, limit_orders):
     """
@@ -47,32 +47,32 @@ def binance_rebalance_loss(x, price1, price2):
     return fee
 
 # Example usage
-def test_rebalance_cl():
+#def test_rebalance_cl():
     balance_price = 1500
     range_percent = 40
     total_value = 10000
     step_percent = 5
 
-    limit_orders = rebalance_cl(balance_price, range_percent, total_value, step_percent)
+    #limit_orders = rebalance_cl(balance_price, range_percent, total_value, step_percent)
 
-    print("\nLimit orders:")
-    np.set_printoptions(precision=2, suppress=True)
-    print(limit_orders)
+    #print("\nLimit orders:")
+    #np.set_printoptions(precision=2, suppress=True)
+    #print(limit_orders)
 
-    current_price = 1550
-    next_lower, next_higher = get_next_trigger_prices(current_price, limit_orders)
-    print(f"\nCurrent price: {current_price}")
-    print(f"Next lower trigger price: {next_lower}")
-    print(f"Next higher trigger price: {next_higher}")
+    #current_price = 1550
+    #next_lower, next_higher = get_next_trigger_prices(current_price, limit_orders)
+    #print(f"\nCurrent price: {current_price}")
+    #print(f"Next lower trigger price: {next_lower}")
+    #print(f"Next higher trigger price: {next_higher}")
 
     # Only calculate crossings if the price has moved to a trigger price
-    if next_higher is not None and current_price >= next_higher:
-        result = calculate_crossings(balance_price, next_higher, limit_orders)
-        print(f"\nCumulative PnL for price movement from {balance_price} to {next_higher}: {result:.2f}")
-    elif next_lower is not None and current_price <= next_lower:
-        result = calculate_crossings(balance_price, next_lower, limit_orders)
-        print(f"\nCumulative PnL for price movement from {balance_price} to {next_lower}: {result:.2f}")
-    else:
-        print("\nNo crossing occurred. No need to calculate PnL.")
+    #if next_higher is not None and current_price >= next_higher:
+        #result = calculate_crossings(balance_price, next_higher, limit_orders)
+        #print(f"\nCumulative PnL for price movement from {balance_price} to {next_higher}: {result:.2f}")
+    #elif next_lower is not None and current_price <= next_lower:
+        #result = calculate_crossings(balance_price, next_lower, limit_orders)
+    #    print(f"\nCumulative PnL for price movement from {balance_price} to {next_lower}: {result:.2f}")
+    #else:
+        #print("\nNo crossing occurred. No need to calculate PnL.")
 
 #test_rebalance_cl()
