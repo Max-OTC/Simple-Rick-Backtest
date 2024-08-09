@@ -13,7 +13,6 @@ CSV_FILENAME = "./src/upnl_log.csv"
 
 last_px = 0
 current_px = 0
-last_tick_time = 0
 limit_orders = []
 
 ######## fees
@@ -42,10 +41,8 @@ current_total_value = 0
 current_balance_price = 0
 
 
-############ Do not modify
+############ time vars
 last_time = 0
 last_10_minutes = 0
-limit_order_list = {}
-last_tick_price = 0
 
 

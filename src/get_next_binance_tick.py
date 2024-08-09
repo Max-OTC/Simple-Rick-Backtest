@@ -21,7 +21,7 @@ def initialize_date_range():
     end = datetime.strptime(vars.simulation_end_day, "%Y%m%d")
     date_list = [(start + timedelta(days=i)).strftime("%Y%m%d") for i in range((end - start).days + 1)]
 
-def get_next_tick(last_time):
+def get_next_binance_tick(last_time):
     global data_cache, date_list, current_date_index, current_data
 
     if date_list is None:

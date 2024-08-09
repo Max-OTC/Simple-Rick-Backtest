@@ -35,7 +35,10 @@ def calculate_crossings(price1, price2, limit_orders):
             prev_price = limit_orders[i-1, 0]
             current_price = limit_orders[i, 0]
             cumulative_pnl += binance_rebalance_loss(x, prev_price, current_price)
+            vars.binance_rebalance_number += 1
+            vars.binance_rebalance_volume +=  x * current_price
 
+    vars.binance_pnl += cumulative_pnl
     return cumulative_pnl
 
 def binance_rebalance_loss(x, price1, price2):

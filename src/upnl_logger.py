@@ -7,7 +7,7 @@ import src.vars as vars
 def reset_log_file():
     with open(vars.CSV_FILENAME, 'w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(['Timestamp', 'Long', 'Short', 'Avg Entry Price', 'USD Balance', 'Price', 'Onchain Pnl', 'Total Fees'])
+        csv_writer.writerow(['Timestamp', 'Price', 'Binance Pnl', 'Uniswap Pnl', 'Binance Rebalance', 'Univ3 Rebalance', 'Binance Volume', 'Univ3 Volume'])
 
 
 # print upnl each 10 minutes of the simulation
@@ -18,12 +18,12 @@ def upnl_logger(time):
             csv_writer = csv.writer(csvfile)
             csv_writer.writerow([
                 int(time/1000),
-                round(vars.long, 2),
-                round(vars.short, 2),
-                int(vars.avg_entry_price),
-                int(vars.usd_balance),
-                int(vars.last_tick_price),
-                int(vars.onchain_pnl),
-                int(vars.total_fees)
+                int(vars.current_px),
+                round(vars.binance_pnl, 2),
+                round(vars.uniswap_pnl, 2),
+                int(vars.binance_rebalance_number),
+                int(vars.uni_rebalance_number),
+                int(vars.binance_rebalance_volume),
+                int(vars.uni_rebalance_volume),
             ])
     vars.last_time = int(time)

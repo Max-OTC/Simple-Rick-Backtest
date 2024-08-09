@@ -1,43 +1,36 @@
 import numpy as np
-from decimal import Decimal
 import src.vars as vars
-
-# We just have to compute the number of rebalance and the fees, we dont need the full sim
 
 def univ3_fee_sim(data):
     fees = univ3_fee_compute(data, vars.pa, vars.pb, vars.x, vars.y)
     vars.total_fees += fees
 
 def univ3_fee_compute(univ3_data, pa, pb, x, y):
-    # Convert the data to a numpy array if it's not already
-    if not isinstance(univ3_data, np.ndarray):
-        data = np.array(univ3_data)
-    else:
-        data = univ3_data
+    # Ensure the data is a numpy array
+    data = np.asarray(univ3_data)
     
     # Extract relevant columns
-    amount_usd = np.array([Decimal(str(val['AMOUNT_USD'])) for val in data])
-    price = np.array([Decimal(str(val['PRICE'])) for val in data])
-    fee_tier = np.array([Decimal(str(val['FEE_TIER'])) for val in data])
-    liquidity = np.array([Decimal(str(val['LIQUIDITY'])) * Decimal('1e-12') for val in data])  # Adjust liquidity
+    amount_usd = data[:, 5].astype(np.float64)
+    price = data[:, 6].astype(np.float64)
+    fee_tier = data[:, 8].astype(np.float64)
+    liquidity = data[:, 9].astype(np.float64) * 1e-12  # Adjust liquidity
     
-    # Calculate user's liquidity (simplified version)
-    user_liquidity = Decimal(str(x)) * Decimal(str(y)).sqrt()
+    # Calculate user's liquidity
+    user_liquidity = float(x) * np.sqrt(float(y))
     
     # Create a mask for trades within the price range
-    in_range_mask = (price >= Decimal(str(pa))) & (price <= Decimal(str(pb)))
+    in_range_mask = (price >= float(pa)) & (price <= float(pb))
     
     # Calculate fees for trades within the range
-    fee_tier_decimal = fee_tier[in_range_mask] / Decimal('1000000')  # Convert basis points to decimal
+    fee_tier_decimal = fee_tier[in_range_mask] / 1e6  # Convert basis points to decimal
     trade_volume = amount_usd[in_range_mask]
     existing_liquidity = liquidity[in_range_mask]
     
     fees = fee_tier_decimal * trade_volume * (user_liquidity / (existing_liquidity + user_liquidity))
     
-    total_fees = sum(fees)
+    total_fees = np.sum(fees)
     
     return total_fees
-
 
 def test():
     # Example usage

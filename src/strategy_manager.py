@@ -4,7 +4,6 @@ import time
 
 last_rebalance_time = 0
 
-
 def strategy_manager():
     if last_rebalance_time == 0:
         rebalance_cl()
